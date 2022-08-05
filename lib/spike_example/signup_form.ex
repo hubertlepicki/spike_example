@@ -10,6 +10,7 @@ defmodule SpikeExample.SignupForm do
   validates(:plan_id, presence: true, by: &__MODULE__.validate_plan_id/2)
 
   def validate_plan_id(nil, _context), do: :ok
+
   def validate_plan_id(value, context) do
     context.available_plans
     |> Enum.map(& &1.id)

@@ -40,7 +40,12 @@ defmodule SpikeExampleWeb.SignupLive do
 
     <label for="plan_id">Choose your plan:</label>
     <.form_field key={:plan_id} form_data={@form_data}>
-      <input name="value" type="number" value={@form_data.plan_id} />
+      <select name="value">
+        <option value="" selected={@form_data.plan_id == nil}>Please select...</option>
+        <%= for plan <- @form_data.available_plans do %>
+          <option value={plan.id} selected={@form_data.plan_id == plan.id}><%= plan.name %></option>
+        <% end %>
+      </select>
     </.form_field>
 
     <.errors let={field_errors} key={:plan_id} form_data={@form_data} errors={@errors}>
@@ -86,7 +91,8 @@ defmodule SpikeExampleWeb.SignupLive do
   def handle_event("reset", _, socket) do
     form_data = init_form_data()
 
-    new_socket = socket
+    new_socket =
+      socket
       |> assign(%{
         form_data: form_data,
         errors: Spike.errors(form_data),
