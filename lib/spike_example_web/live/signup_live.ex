@@ -3,13 +3,24 @@ defmodule SpikeExampleWeb.SignupLive do
   import Spike.LiveView.{FormField, Errors}
 
   def mount(_params, _, socket) do
+    form_data = init_form_data()
+
     {:ok,
      socket
      |> assign(%{
-       form_data:
-         SpikeExample.SignupForm.new(%{available_plans: find_plans()}, cast_private: true),
-       errors: %{}
+       success: false,
+       form_data: form_data,
+       errors: Spike.errors(form_data)
      })}
+  end
+
+  def render(%{success: true} = assigns) do
+    ~H"""
+    <h2>Example signup form:</h2>
+
+    <p>Signup successful!</p>
+    <a href="#" phx-click="reset">Start over</a>
+    """
   end
 
   def render(assigns) do
@@ -18,7 +29,7 @@ defmodule SpikeExampleWeb.SignupLive do
 
     <label for="company_name">Company name:</label>
     <.form_field key={:company_name} form_data={@form_data}>
-      <input name="value" type="text" value={@form_data.company_name} phx-debounce={1000} />
+      <input name="value" type="text" value={@form_data.company_name} />
     </.form_field>
 
     <.errors let={field_errors} key={:company_name} form_data={@form_data} errors={@errors}>
@@ -27,17 +38,66 @@ defmodule SpikeExampleWeb.SignupLive do
       </span>
     </.errors>
 
-    <h4>Debug info:</h4>
+    <label for="plan_id">Choose your plan:</label>
+    <.form_field key={:plan_id} form_data={@form_data}>
+      <input name="value" type="number" value={@form_data.plan_id} />
+    </.form_field>
+
+    <.errors let={field_errors} key={:plan_id} form_data={@form_data} errors={@errors}>
+      <span class="error">
+        <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
+      </span>
+    </.errors>
+
+
+    <div class="clearfix" />
+    <a class="float-right" href="#" phx-click="reset">Reset</a>
+    <a class="button" href="#" phx-click="submit">Submit</a>
+
+    <hr/>
+
+    <h4>Debug info</h4>
+    Form data:
     <pre>
-      Form data:
       <%= inspect @form_data, pretty: true %>
     </pre>
 
+    Errors:
     <pre>
-      Errors:
       <%= inspect @errors, pretty: true %>
     </pre>
+
+    Success:
+    <pre>
+      <%= inspect @success, pretty: true %>
+    </pre>
+
     """
+  end
+
+  def handle_event("submit", _, socket) do
+    if socket.assigns.errors == %{} do
+      {:noreply, socket |> assign(:success, true)}
+    else
+      {:noreply, socket |> assign(:form_data, Spike.make_dirty(socket.assigns.form_data))}
+    end
+  end
+
+  def handle_event("reset", _, socket) do
+    form_data = init_form_data()
+
+    new_socket = socket
+      |> assign(%{
+        form_data: form_data,
+        errors: Spike.errors(form_data),
+        success: false
+      })
+
+    {:noreply, new_socket}
+  end
+
+  defp init_form_data do
+    SpikeExample.SignupForm.new(%{available_plans: find_plans()}, cast_private: true)
   end
 
   defp find_plans() do
