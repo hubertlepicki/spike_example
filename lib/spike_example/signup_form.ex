@@ -5,6 +5,9 @@ defmodule SpikeExample.SignupForm do
     field(:subdomain, :string)
 
     field(:available_plans, {:array, :map}, private: true)
+
+    embeds_one(:account_owner, __MODULE__.AccountOwner)
+    embeds_many(:coworkers, __MODULE__.Coworker)
   end
 
   validates(:company_name, presence: true)
