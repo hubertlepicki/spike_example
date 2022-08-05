@@ -18,6 +18,7 @@ defmodule SpikeExampleWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+    live "/signup", SignupLive
   end
 
   # Other scopes may use custom stacks.

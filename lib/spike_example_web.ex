@@ -51,6 +51,17 @@ defmodule SpikeExampleWeb do
     end
   end
 
+  def form_live_view do
+    quote do
+      use Phoenix.LiveView,
+        layout: {SpikeExampleWeb.LayoutView, "live.html"}
+
+      unquote(view_helpers())
+
+      use Spike.LiveView.FormLiveView
+    end
+  end
+
   def live_component do
     quote do
       use Phoenix.LiveComponent

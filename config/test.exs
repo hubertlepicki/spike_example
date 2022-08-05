@@ -8,8 +8,7 @@ config :spike_example, SpikeExampleWeb.Endpoint,
   server: false
 
 # In test we don't send emails.
-config :spike_example, SpikeExample.Mailer,
-  adapter: Swoosh.Adapters.Test
+config :spike_example, SpikeExample.Mailer, adapter: Swoosh.Adapters.Test
 
 # Print only warnings and errors during test
 config :logger, level: :warn

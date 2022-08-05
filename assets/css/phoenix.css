@@ -99,3 +99,16 @@ header nav a {
     margin: 2rem 1rem;
   }
 }
+
+
+/* Style customizations */
+
+form {
+  margin-bottom: 0;
+}
+
+.error {
+  color: red;
+  position: relative;
+  top: -1.5rem;
+}
