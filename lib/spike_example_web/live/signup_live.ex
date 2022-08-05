@@ -38,6 +38,17 @@ defmodule SpikeExampleWeb.SignupLive do
       </span>
     </.errors>
 
+    <label for="subdomain">Your subdomain:</label>
+    <.form_field key={:subdomain} form_data={@form_data}>
+      <input name="value" type="text" value={@form_data.subdomain} />
+    </.form_field>
+
+    <.errors let={field_errors} key={:subdomain} form_data={@form_data} errors={@errors}>
+      <span class="error">
+        <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
+      </span>
+    </.errors>
+
     <label for="plan_id">Choose your plan:</label>
     <.form_field key={:plan_id} form_data={@form_data}>
       <select name="value">
