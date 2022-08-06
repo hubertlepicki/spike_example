@@ -1,6 +1,6 @@
 defmodule SpikeExampleWeb.SignupLive do
   use SpikeExampleWeb, :form_live_view
-  import Spike.LiveView.{FormField, Errors}
+  import SpikeExampleWeb.FormComponents
 
   def mount(_params, _, socket) do
     form_data = init_form_data()
@@ -27,99 +27,25 @@ defmodule SpikeExampleWeb.SignupLive do
     ~H"""
     <h2>Example signup form:</h2>
 
-    <label for="company_name">Company name:</label>
-    <.form_field key={:company_name} form_data={@form_data}>
-      <input id="company_name" name="value" type="text" value={@form_data.company_name} />
-    </.form_field>
+    <.input_component type="text" label="Company name:" key={:company_name} form_data={@form_data} errors={@errors} />
+    <.input_component type="text" label="Subdomain:" key={:subdomain} form_data={@form_data} errors={@errors} />
+    <.input_component type="select" label="Choose your plan:" key={:plan_id} form_data={@form_data} errors={@errors} options={plan_options(@form_data)} />
+    <.input_component type="text" label="Your name:" key={:full_name} form_data={@form_data.account_owner} errors={@errors} />
+    <.input_component type="text" label="Your email:" key={:email_address} form_data={@form_data.account_owner} errors={@errors} />
 
-    <.errors let={field_errors} key={:company_name} form_data={@form_data} errors={@errors}>
-      <span class="error">
-        <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
-      </span>
-    </.errors>
-
-    <label for="subdomain">Your subdomain:</label>
-    <.form_field key={:subdomain} form_data={@form_data}>
-      <input id="subdomain" name="value" type="text" value={@form_data.subdomain} />
-    </.form_field>
-
-    <.errors let={field_errors} key={:subdomain} form_data={@form_data} errors={@errors}>
-      <span class="error">
-        <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
-      </span>
-    </.errors>
-
-    <label for="plan_id">Choose your plan:</label>
-    <.form_field key={:plan_id} form_data={@form_data}>
-      <select id="plan_id" name="value">
-        <option value="" selected={@form_data.plan_id == nil}>Please select...</option>
-        <%= for plan <- @form_data.available_plans do %>
-          <option value={plan.id} selected={@form_data.plan_id == plan.id}><%= plan.name %></option>
-        <% end %>
-      </select>
-    </.form_field>
-
-    <.errors let={field_errors} key={:plan_id} form_data={@form_data} errors={@errors}>
-      <span class="error">
-        <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
-      </span>
-    </.errors>
-
-    <label for="account_owner_full_name">Your name:</label>
-    <.form_field key={:full_name} form_data={@form_data.account_owner}>
-      <input id="account_owner_full_name" name="value" type="text" value={@form_data.account_owner.full_name} />
-    </.form_field>
-
-    <.errors let={field_errors} key={:full_name} form_data={@form_data.account_owner} errors={@errors}>
-      <span class="error">
-        <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
-      </span>
-    </.errors>
-
-    <label for="account_owner_email">Your e-mail:</label>
-    <.form_field key={:email_address} form_data={@form_data.account_owner}>
-      <input id="account_owner_email_address" name="value" type="text" value={@form_data.account_owner.email_address} />
-    </.form_field>
-
-    <.errors let={field_errors} key={:email_address} form_data={@form_data.account_owner} errors={@errors}>
-      <span class="error">
-        <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
-      </span>
-    </.errors>
-
+    <br/>
 
     <%= if @form_data.coworkers |> length() > 0 do %>
       <h3>
-        Yor co-workers
+        Your co-workers
       </h3>
     <% end %>
 
     <%= for coworker <- @form_data.coworkers do %>
       <a class="float-right" href="#" phx-click="remove_coworker" phx-value-ref={coworker.ref}>x</a>
-
-      <label for={"coworker_#{coworker.ref}_full_name"}>Coworker name:</label>
-      <.form_field key={:full_name} form_data={coworker}>
-        <input id={"coworker_#{coworker.ref}_full_name"} name="value" type="text" value={coworker.full_name} />
-      </.form_field>
-
-      <.errors let={field_errors} key={:full_name} form_data={coworker} errors={@errors}>
-        <span class="error">
-          <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
-        </span>
-      </.errors>
-
-      <label for={"coworker_#{coworker.ref}_email_address"}>Coworker e-mail:</label>
-      <.form_field key={:email_address} form_data={coworker}>
-        <input id={"coworker_#{coworker.ref}_email_address"} name="value" type="text" value={coworker.email_address} />
-      </.form_field>
-
-      <.errors let={field_errors} key={:email_address} form_data={coworker} errors={@errors}>
-        <span class="error">
-          <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
-        </span>
-      </.errors>
+      <.input_component type="text" label="Coworker name:" key={:full_name} form_data={coworker} errors={@errors} />
+      <.input_component type="text" label="Coworker e-mail:" key={:email_address} form_data={coworker} errors={@errors} />
     <% end %>
-
 
     <div class="clearfix" />
     <a class="float-right" href="#" phx-click="reset">Reset</a>
@@ -201,5 +127,12 @@ defmodule SpikeExampleWeb.SignupLive do
       %{id: 2, name: "Growth", price: 1},
       %{id: 3, name: "Enterprise", price: 9000}
     ]
+  end
+
+  defp plan_options(form_data) do
+    [{nil, "Please select..."}] ++
+      Enum.map(form_data.available_plans, fn plan ->
+        {plan.id, plan.name}
+      end)
   end
 end
