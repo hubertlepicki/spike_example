@@ -27,11 +27,15 @@ defmodule SpikeExampleWeb.SignupLive do
     ~H"""
     <h2>Example signup form:</h2>
 
+    <div class="float-right">* required fields</div>
     <.input_component type="text" label="Company name:" key={:company_name} form_data={@form_data} errors={@errors} />
     <.input_component type="text" label="Subdomain:" key={:subdomain} form_data={@form_data} errors={@errors} />
     <.input_component type="select" label="Choose your plan:" key={:plan_id} form_data={@form_data} errors={@errors} options={plan_options(@form_data)} />
     <.input_component type="text" label="Your name:" key={:full_name} form_data={@form_data.account_owner} errors={@errors} />
     <.input_component type="text" label="Your email:" key={:email_address} form_data={@form_data.account_owner} errors={@errors} />
+    <.input_component type="password" label="Your password:" key={:password} form_data={@form_data.account_owner} errors={@errors} />
+
+    <.input_component type="textarea" label="How did you hear about us?" key={:note} form_data={@form_data} errors={@errors} />
 
     <br/>
 
@@ -46,6 +50,8 @@ defmodule SpikeExampleWeb.SignupLive do
       <.input_component type="text" label="Coworker name:" key={:full_name} form_data={coworker} errors={@errors} />
       <.input_component type="text" label="Coworker e-mail:" key={:email_address} form_data={coworker} errors={@errors} />
     <% end %>
+
+    <.errors_component form_data={@form_data} key={:coworkers} errors={@errors} />
 
     <div class="clearfix" />
     <a class="float-right" href="#" phx-click="reset">Reset</a>
@@ -123,16 +129,16 @@ defmodule SpikeExampleWeb.SignupLive do
 
   defp find_plans() do
     [
-      %{id: 1, name: "Starter", price: 0},
-      %{id: 2, name: "Growth", price: 1},
-      %{id: 3, name: "Enterprise", price: 9000}
+      %{id: 1, name: "Starter", price: 0, max_users: 1},
+      %{id: 2, name: "Growth", price: 1, max_users: 5},
+      %{id: 3, name: "Enterprise", price: 9000, max_users: :infinity}
     ]
   end
 
   defp plan_options(form_data) do
     [{nil, "Please select..."}] ++
       Enum.map(form_data.available_plans, fn plan ->
-        {plan.id, plan.name}
+        {plan.id, "#{plan.name} (#{plan.price} USD / month)"}
       end)
   end
 end

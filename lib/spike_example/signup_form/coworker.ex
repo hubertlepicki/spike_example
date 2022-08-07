@@ -5,7 +5,14 @@ defmodule SpikeExample.SignupForm.Coworker do
   end
 
   validates(:full_name, presence: true)
-  validates(:email_address, presence: true, by: &__MODULE__.validate_email_address_not_used/2)
+
+  validates(:email_address,
+    presence: true,
+    by: &__MODULE__.validate_email_address_not_used/2,
+    format: [with: ~r/^[A-Za-z0-9\._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/, allow_blank: true]
+  )
+
+  def validate_email_address_not_used(nil, _), do: :ok
 
   def validate_email_address_not_used(email, coworker) do
     [signup_form, :coworkers] = Spike.context(coworker)

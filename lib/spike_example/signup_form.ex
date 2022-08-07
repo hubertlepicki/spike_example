@@ -3,6 +3,7 @@ defmodule SpikeExample.SignupForm do
     field(:company_name, :string)
     field(:plan_id, :integer)
     field(:subdomain, :string)
+    field(:note, :string)
 
     field(:available_plans, {:array, :map}, private: true)
 
@@ -13,11 +14,24 @@ defmodule SpikeExample.SignupForm do
   validates(:company_name, presence: true)
   validates(:plan_id, presence: true, by: &__MODULE__.validate_plan_id/2)
   validates(:subdomain, presence: true)
+  validates(:coworkers, by: &__MODULE__.validate_users_within_paln_limits/2)
 
-  def validate_plan_id(nil, _context), do: :ok
+  def validate_users_within_paln_limits(_coworkers, %{plan_id: nil} = _form_data), do: :ok
 
-  def validate_plan_id(value, context) do
-    context.available_plans
+  def validate_users_within_paln_limits(coworkers, form_data) do
+    plan = form_data.available_plans |> Enum.find(&(&1.id == form_data.plan_id))
+
+    if plan && plan.max_users < length(coworkers) + 1 do
+      {:error, "you can only have #{plan.max_users} users on \"#{plan.name}\" plan"}
+    else
+      :ok
+    end
+  end
+
+  def validate_plan_id(nil, _form_data), do: :ok
+
+  def validate_plan_id(value, form_data) do
+    form_data.available_plans
     |> Enum.map(& &1.id)
     |> Enum.member?(value)
     |> if do

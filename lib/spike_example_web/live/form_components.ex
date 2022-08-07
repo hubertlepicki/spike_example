@@ -13,21 +13,44 @@ defmodule SpikeExampleWeb.FormComponents do
     """
   end
 
-  def label_component(%{ref: _ref, text: _text, key: _key} = assigns) do
-    ~H"""
-    <label for={"#{@ref}_#{@key}"}><%= @text %></label>
-    """
+  def label_component(%{ref: _ref, text: _text, key: _key, required: required} = assigns) do
+    if required do
+      ~H"""
+      <label for={"#{@ref}_#{@key}"}>* <%= @text %></label>
+      """
+    else
+      ~H"""
+      <label for={"#{@ref}_#{@key}"}><%= @text %></label>
+      """
+    end
   end
 
-  def input_component(%{type: "text", key: _, form_data: _, errors: _} = assigns) do
+  def input_component(%{type: "textarea", key: _, form_data: _, errors: _} = assigns) do
     ~H"""
     <div>
       <%= if @label do %>
-        <.label_component text={@label} ref={@form_data.ref} key={@key} />
+        <.label_component text={@label} ref={@form_data.ref} key={@key} required={is_required?(@form_data, @key)} />
       <% end %>
 
       <.form_field key={@key} form_data={@form_data}>
-        <input id={"#{@form_data.ref}_#{@key}"} name="value" type="text" value={@form_data |> Map.get(@key)} />
+        <textarea id={"#{@form_data.ref}_#{@key}"} name="value"><%= @form_data |> Map.get(@key) %></textarea>
+      </.form_field>
+
+      <.errors_component form_data={@form_data} key={@key} errors={@errors} />
+    </div>
+    """
+  end
+
+  def input_component(%{type: type, key: _, form_data: _, errors: _} = assigns)
+      when type in ["text", "password"] do
+    ~H"""
+    <div>
+      <%= if @label do %>
+        <.label_component text={@label} ref={@form_data.ref} key={@key} required={is_required?(@form_data, @key)} />
+      <% end %>
+
+      <.form_field key={@key} form_data={@form_data}>
+        <input id={"#{@form_data.ref}_#{@key}"} name="value" type={type} value={@form_data |> Map.get(@key)} />
       </.form_field>
 
       <.errors_component form_data={@form_data} key={@key} errors={@errors} />
@@ -39,7 +62,7 @@ defmodule SpikeExampleWeb.FormComponents do
     ~H"""
     <div>
       <%= if @label do %>
-        <.label_component text={@label} ref={@form_data.ref} key={@key} />
+        <.label_component text={@label} ref={@form_data.ref} key={@key} required={is_required?(@form_data, @key)} />
       <% end %>
 
       <.form_field key={@key} form_data={@form_data}>
@@ -53,5 +76,9 @@ defmodule SpikeExampleWeb.FormComponents do
       <.errors_component form_data={@form_data} key={@key} errors={@errors} />
     </div>
     """
+  end
+
+  defp is_required?(form_data, key) do
+    {:presence, true} in (Vex.Extract.settings(form_data) |> Map.get(key, []))
   end
 end
