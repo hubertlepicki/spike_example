@@ -46,8 +46,8 @@ defmodule SpikeExample.MixProject do
       {:gettext, "~> 0.18"},
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
-      {:spike, github: "hubertlepicki/spike"},
-      {:spike_liveview, github: "hubertlepicki/spike-liveview"}
+      {:spike, "~> 0.1"},
+      {:spike_liveview, "~> 0.1"}
     ]
   end
 
