@@ -42,7 +42,7 @@ defmodule SpikeExample.SignupForm do
   end
 
   def after_update(_old_form_data, new_form_data, changed_fields) do
-    if :company_name in changed_fields && :subdomain not in new_form_data.__dirty_fields__ do
+    if :company_name in changed_fields && :subdomain not in Spike.dirty_fields(new_form_data)[new_form_data.ref] do
       %{new_form_data | subdomain: generate_subdomain(new_form_data)}
     else
       new_form_data

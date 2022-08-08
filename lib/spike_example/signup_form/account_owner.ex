@@ -17,7 +17,7 @@ defmodule SpikeExample.SignupForm.AccountOwner do
   def validate_email_address_not_used(nil, _), do: :ok
 
   def validate_email_address_not_used(email, account_owner) do
-    [signup_form, :account_owner] = Spike.context(account_owner)
+    [signup_form, :account_owner] = Spike.validation_context(account_owner)
 
     cond do
       Enum.any?(signup_form.coworkers, fn coworker -> coworker.email_address == email end) ->

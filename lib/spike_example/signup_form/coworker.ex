@@ -15,7 +15,7 @@ defmodule SpikeExample.SignupForm.Coworker do
   def validate_email_address_not_used(nil, _), do: :ok
 
   def validate_email_address_not_used(email, coworker) do
-    [signup_form, :coworkers] = Spike.context(coworker)
+    [signup_form, :coworkers] = Spike.validation_context(coworker)
 
     cond do
       signup_form.account_owner && signup_form.account_owner.email_address == email ->
