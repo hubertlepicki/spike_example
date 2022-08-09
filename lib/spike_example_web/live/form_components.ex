@@ -1,11 +1,11 @@
 defmodule SpikeExampleWeb.FormComponents do
   use SpikeExampleWeb, :component
 
-  import Spike.LiveView.{FormField, Errors}
+  import Spike.LiveView.Components
 
-  def errors_component(%{form_data: _, key: _, errors: _} = assigns) do
+  def errors_component(%{form: _, field: _, errors: _} = assigns) do
     ~H"""
-    <.errors let={field_errors} key={@key} form_data={@form_data} errors={@errors}>
+    <.errors let={field_errors} field={@field} form={@form} errors={@errors}>
       <span class="error">
         <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
       </span>
@@ -13,72 +13,103 @@ defmodule SpikeExampleWeb.FormComponents do
     """
   end
 
-  def label_component(%{ref: _ref, text: _text, key: _key, required: required} = assigns) do
+  def label_component(%{ref: _ref, text: _text, field: _field, required: required} = assigns) do
     if required do
       ~H"""
-      <label for={"#{@ref}_#{@key}"}>* <%= @text %></label>
+      <label for={"#{@ref}_#{@field}"}>* <%= @text %></label>
       """
     else
       ~H"""
-      <label for={"#{@ref}_#{@key}"}><%= @text %></label>
+      <label for={"#{@ref}_#{@field}"}><%= @text %></label>
       """
     end
   end
 
-  def input_component(%{type: "textarea", key: _, form_data: _, errors: _} = assigns) do
+  def input_component(%{type: "textarea", field: _, form: _, errors: _} = assigns) do
     ~H"""
     <div>
       <%= if @label do %>
-        <.label_component text={@label} ref={@form_data.ref} key={@key} required={is_required?(@form_data, @key)} />
+        <.label_component text={@label} ref={@form.ref} field={@field} required={is_required?(@form, @field)} />
       <% end %>
 
-      <.form_field key={@key} form_data={@form_data}>
-        <textarea id={"#{@form_data.ref}_#{@key}"} name="value"><%= @form_data |> Map.get(@key) %></textarea>
+      <.form_field field={@field} form={@form}>
+        <textarea id={"#{@form.ref}_#{@field}"} name="value"><%= @form |> Map.get(@field) %></textarea>
       </.form_field>
 
-      <.errors_component form_data={@form_data} key={@key} errors={@errors} />
+      <.errors_component form={@form} field={@field} errors={@errors} />
     </div>
     """
   end
 
-  def input_component(%{type: type, key: _, form_data: _, errors: _} = assigns)
-      when type in ["text", "password"] do
+  def input_component(%{type: type, field: _, form: _, errors: _} = assigns)
+      when type in ["text", "password", "email"] do
     ~H"""
     <div>
       <%= if @label do %>
-        <.label_component text={@label} ref={@form_data.ref} key={@key} required={is_required?(@form_data, @key)} />
+        <.label_component text={@label} ref={@form.ref} field={@field} required={is_required?(@form, @field)} />
       <% end %>
 
-      <.form_field key={@key} form_data={@form_data}>
-        <input id={"#{@form_data.ref}_#{@key}"} name="value" type={type} value={@form_data |> Map.get(@key)} />
+      <.form_field field={@field} form={@form}>
+        <input id={"#{@form.ref}_#{@field}"} name="value" type={type} value={@form |> Map.get(@field)} />
       </.form_field>
 
-      <.errors_component form_data={@form_data} key={@key} errors={@errors} />
+      <.errors_component form={@form} field={@field} errors={@errors} />
     </div>
     """
   end
 
-  def input_component(%{type: "select", key: _, form_data: _, errors: _, options: _} = assigns) do
+  def input_component(%{type: "checkbox", field: _, form: _, errors: _} = assigns) do
+    assigns = assigns
+              |> assign_new(:checked_value, fn -> "1" end)
+              |> assign_new(:unchecked_value, fn -> "0" end)
+
+    ~H"""
+    <div>
+      <.form_field field={@field} form={@form}>
+        <span class="float-left">
+          <input id={"#{@form.ref}_#{@field}_unchecked"} name="value" type="hidden" value={@unchecked_value} />
+          <input id={"#{@form.ref}_#{@field}"} name="value" type="checkbox" value={@checked_value} checked={is_checked?(@form, @field, @checked_value)} />
+        </span>
+
+        <span>
+          <%= if @label do %>
+            <.label_component text={@label} ref={@form.ref} field={@field} required={is_required?(@form, @field)} />
+          <% end %>
+        </span>
+
+      </.form_field>
+
+      <.errors_component form={@form} field={@field} errors={@errors} />
+    </div>
+    """
+  end
+
+  def input_component(%{type: "select", field: _, form: _, errors: _, options: _} = assigns) do
     ~H"""
     <div>
       <%= if @label do %>
-        <.label_component text={@label} ref={@form_data.ref} key={@key} required={is_required?(@form_data, @key)} />
+        <.label_component text={@label} ref={@form.ref} field={@field} required={is_required?(@form, @field)} />
       <% end %>
 
-      <.form_field key={@key} form_data={@form_data}>
-        <select id={"#{@form_data.ref}_#{@key}"} name="value">
+      <.form_field field={@field} form={@form}>
+        <select id={"#{@form.ref}_#{@field}"} name="value">
           <%= for {value, text} <- @options do %>
-            <option value={value || ""} selected={@form_data |> Map.get(@key) == value}><%= text %></option>
+            <option value={value || ""} selected={@form |> Map.get(@field) == value}><%= text %></option>
           <% end %>
         </select>
       </.form_field>
 
-      <.errors_component form_data={@form_data} key={@key} errors={@errors} />
+      <.errors_component form={@form} field={@field} errors={@errors} />
     </div>
     """
   end
 
-  defp is_required?(form_data, key) do
-    {:presence, true} in (Vex.Extract.settings(form_data) |> Map.get(key, []))
+  defp is_checked?(form, field, checked_value) do
+    Map.get(form, field) == checked_value || Map.get(form, field) == true
+  end
+
+  defp is_required?(form, field) do
+    validations = Vex.Extract.settings(form) |> Map.get(field, [])
+    {:presence, true} in validations
   end
 end

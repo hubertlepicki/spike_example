@@ -58,7 +58,7 @@ defmodule SpikeExampleWeb do
 
       unquote(view_helpers())
 
-      use Spike.LiveView.FormLiveView
+      use Spike.LiveView
     end
   end
 
