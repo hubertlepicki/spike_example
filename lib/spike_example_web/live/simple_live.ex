@@ -10,6 +10,7 @@ defmodule SpikeExampleWeb.SimpleLive do
 
   def render(%{success: true} = assigns) do
     ~H"""
+    <a href="/" class="float-right">Back to all examples</a>
     <h2>Simple form:</h2>
 
     <p>Success!</p>
@@ -24,6 +25,7 @@ defmodule SpikeExampleWeb.SimpleLive do
 
   def render(%{form: _, errors: _} = assigns) do
     ~H"""
+    <a href="/" class="float-right">Back to all examples</a>
     <h2>Simple form:</h2>
 
     <div class="float-right">* required fields</div>

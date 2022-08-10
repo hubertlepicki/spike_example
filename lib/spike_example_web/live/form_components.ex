@@ -26,13 +26,15 @@ defmodule SpikeExampleWeb.FormComponents do
   end
 
   def input_component(%{type: "textarea", field: _, form: _, errors: _} = assigns) do
+    assigns = assigns |> assign_new(:target, fn -> nil end)
+
     ~H"""
     <div>
       <%= if @label do %>
         <.label_component text={@label} ref={@form.ref} field={@field} required={is_required?(@form, @field)} />
       <% end %>
 
-      <.form_field field={@field} form={@form}>
+      <.form_field field={@field} form={@form} target={@target}>
         <textarea id={"#{@form.ref}_#{@field}"} name="value"><%= @form |> Map.get(@field) %></textarea>
       </.form_field>
 
@@ -43,13 +45,15 @@ defmodule SpikeExampleWeb.FormComponents do
 
   def input_component(%{type: type, field: _, form: _, errors: _} = assigns)
       when type in ["text", "password", "email"] do
+    assigns = assigns |> assign_new(:target, fn -> nil end)
+
     ~H"""
     <div>
       <%= if @label do %>
         <.label_component text={@label} ref={@form.ref} field={@field} required={is_required?(@form, @field)} />
       <% end %>
 
-      <.form_field field={@field} form={@form}>
+      <.form_field field={@field} form={@form} target={@target}>
         <input id={"#{@form.ref}_#{@field}"} name="value" type={type} value={@form |> Map.get(@field)} />
       </.form_field>
 
@@ -62,10 +66,11 @@ defmodule SpikeExampleWeb.FormComponents do
     assigns = assigns
               |> assign_new(:checked_value, fn -> "1" end)
               |> assign_new(:unchecked_value, fn -> "0" end)
+              |> assign_new(:target, fn -> nil end)
 
     ~H"""
     <div>
-      <.form_field field={@field} form={@form}>
+      <.form_field field={@field} form={@form} target={@target}>
         <span class="float-left">
           <input id={"#{@form.ref}_#{@field}_unchecked"} name="value" type="hidden" value={@unchecked_value} />
           <input id={"#{@form.ref}_#{@field}"} name="value" type="checkbox" value={@checked_value} checked={is_checked?(@form, @field, @checked_value)} />
@@ -85,13 +90,15 @@ defmodule SpikeExampleWeb.FormComponents do
   end
 
   def input_component(%{type: "select", field: _, form: _, errors: _, options: _} = assigns) do
+    assigns = assigns |> assign_new(:target, fn -> nil end)
+
     ~H"""
     <div>
       <%= if @label do %>
         <.label_component text={@label} ref={@form.ref} field={@field} required={is_required?(@form, @field)} />
       <% end %>
 
-      <.form_field field={@field} form={@form}>
+      <.form_field field={@field} form={@form} target={@target}>
         <select id={"#{@form.ref}_#{@field}"} name="value">
           <%= for {value, text} <- @options do %>
             <option value={value || ""} selected={@form |> Map.get(@field) == value}><%= text %></option>

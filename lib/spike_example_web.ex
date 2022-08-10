@@ -70,6 +70,16 @@ defmodule SpikeExampleWeb do
     end
   end
 
+  def form_live_component do
+    quote do
+      use Phoenix.LiveComponent
+
+      unquote(view_helpers())
+
+      use Spike.LiveView
+    end
+  end
+
   def component do
     quote do
       use Phoenix.Component

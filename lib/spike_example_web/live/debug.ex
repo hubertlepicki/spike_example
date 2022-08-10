@@ -1,8 +1,6 @@
 defmodule SpikeExampleWeb.Debug do
   use SpikeExampleWeb, :component
 
-  import Spike.LiveView.Components
-
   def debug_assigns(%{form: _, errors: _, success: _} = assigns) do
     ~H"""
     <h3>Debug info</h3>

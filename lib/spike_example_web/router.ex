@@ -21,6 +21,7 @@ defmodule SpikeExampleWeb.Router do
 
     live "/signup", SignupLive
     live "/simple-liveview", SimpleLive
+    live "/simple-livecomponent", SimpleComponentLive
   end
 
   # Other scopes may use custom stacks.

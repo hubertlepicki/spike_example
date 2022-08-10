@@ -17,6 +17,7 @@ defmodule SpikeExampleWeb.SignupLive do
 
   def render(%{success: true} = assigns) do
     ~H"""
+    <a href="/" class="float-right">Back to all examples</a>
     <h2>Example signup form:</h2>
 
     <p>Signup successful!</p>
@@ -30,6 +31,7 @@ defmodule SpikeExampleWeb.SignupLive do
 
   def render(assigns) do
     ~H"""
+    <a href="/" class="float-right">Back to all examples</a>
     <h2>Example signup form:</h2>
 
     <div class="float-right">* required fields</div>
