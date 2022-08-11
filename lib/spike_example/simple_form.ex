@@ -1,14 +1,14 @@
 defmodule SpikeExample.SimpleForm do
   use Spike.Form do
-    field :first_name, :string
-    field :last_name, :string
-    field :email_address, :string
-    field :password, :string
-    field :accepts_conditions, :boolean, default: false
+    field(:first_name, :string)
+    field(:last_name, :string)
+    field(:email_address, :string)
+    field(:password, :string)
+    field(:accepts_conditions, :boolean, default: false)
   end
 
-  validates :first_name, presence: true
-  validates :last_name, presence: true
+  validates(:first_name, presence: true)
+  validates(:last_name, presence: true)
 
   validates(:email_address,
     presence: true,

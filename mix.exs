@@ -4,7 +4,7 @@ defmodule SpikeExample.MixProject do
   def project do
     [
       app: :spike_example,
-      version: "0.1.0",
+      version: "0.2.1",
       elixir: "~> 1.12",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: Mix.compilers(),
@@ -37,6 +37,7 @@ defmodule SpikeExample.MixProject do
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 0.17.5"},
+      {:surface, "~> 0.7.5"},
       {:floki, ">= 0.30.0", only: :test},
       {:phoenix_live_dashboard, "~> 0.6"},
       {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
@@ -47,7 +48,8 @@ defmodule SpikeExample.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:spike, "~> 0.2"},
-      {:spike_liveview, path: "../spike-liveview"}
+      {:spike_liveview, "~> 0.2"},
+      {:spike_surface, "~> 0.2"},
     ]
   end
 

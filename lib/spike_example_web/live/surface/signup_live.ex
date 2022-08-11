@@ -1,0 +1,138 @@
+defmodule SpikeExampleWeb.Surface.SignupLive do
+  use SpikeExampleWeb, :form_surface_live_view
+  alias SpikeExampleWeb.Surface.FormComponents.{Input, Errors}
+  import SpikeExampleWeb.Debug
+
+  data(success, :boolean, default: false)
+
+  def mount(_params, _, socket) do
+    form = init_form()
+
+    {:ok,
+     socket
+     |> assign(%{
+       form: form,
+       errors: Spike.errors(form)
+     })}
+  end
+
+  def render(%{success: true} = assigns) do
+    ~F"""
+    <a href="/" class="float-right">Back to all examples</a>
+    <h2>Example signup form:</h2>
+
+    <p>Signup successful!</p>
+    <a href="#" phx-click="reset">Start over</a>
+
+    <hr/>
+
+    <.debug_assigns form={@form} errors={@errors} success={@success} />
+    """
+  end
+
+  def render(assigns) do
+    ~F"""
+    <a href="/" class="float-right">Back to all examples</a>
+    <h2>Example signup form:</h2>
+
+    <div class="float-right">* required fields</div>
+
+    <Input type="text" label="Company name:" field={:company_name} form={@form} errors={@errors} />
+    <Input type="text" label="Subdomain:" field={:subdomain} form={@form} errors={@errors} />
+    <Input type="select" label="Choose your plan:" field={:plan_id} form={@form} errors={@errors} options={plan_options(@form)} />
+    <Input type="text" label="Your name:" field={:full_name} form={@form.account_owner} errors={@errors} />
+    <Input type="email" label="Your email:" field={:email_address} form={@form.account_owner} errors={@errors} />
+    <Input type="password" label="Your password:" field={:password} form={@form.account_owner} errors={@errors} />
+
+    <Input type="textarea" label="How did you hear about us?" field={:note} form={@form} errors={@errors} />
+
+    <br/>
+
+    {#if @form.coworkers |> length() > 0}
+      <h3>
+        Your co-workers
+      </h3>
+    {/if}
+
+    {#for coworker <- @form.coworkers}
+      <a class="float-right" href="#" phx-click="remove_coworker" phx-value-ref={coworker.ref}>x</a>
+      <Input type="text" label="Coworker name:" field={:full_name} form={coworker} errors={@errors} />
+      <Input type="text" label="Coworker e-mail:" field={:email_address} form={coworker} errors={@errors} />
+    {/for}
+
+    <Errors form={@form} field={:coworkers} errors={@errors} />
+
+    <div class="clearfix" />
+    <a class="float-right" href="#" phx-click="reset">Reset</a>
+    <a class="button" href="#" phx-click="submit">Submit</a>
+    <a class="button" href="#" phx-click="add_coworker">+ Add coworker</a>
+
+    <hr/>
+
+    <.debug_assigns form={@form} errors={@errors} success={@success} />
+    """
+  end
+
+  def handle_event("submit", _, socket) do
+    if socket.assigns.errors == %{} do
+      {:noreply, socket |> assign(:success, true)}
+    else
+      {:noreply, socket |> assign(:form, Spike.make_dirty(socket.assigns.form))}
+    end
+  end
+
+  def handle_event("reset", _, socket) do
+    form = init_form()
+
+    new_socket =
+      socket
+      |> assign(%{
+        form: form,
+        errors: Spike.errors(form),
+        success: false
+      })
+
+    {:noreply, new_socket}
+  end
+
+  def handle_event("add_coworker", _, %{assigns: %{form: form}} = socket) do
+    form = form |> Spike.append(form.ref, :coworkers, %{})
+    errors = Spike.errors(form)
+    {:noreply, socket |> assign(%{form: form, errors: errors})}
+  end
+
+  def handle_event(
+        "remove_coworker",
+        %{"ref" => ref},
+        %{assigns: %{form: form}} = socket
+      ) do
+    form = form |> Spike.delete(ref)
+    errors = Spike.errors(form)
+    {:noreply, socket |> assign(%{form: form, errors: errors})}
+  end
+
+  defp init_form do
+    SpikeExample.SignupForm.new(
+      %{
+        available_plans: find_plans(),
+        account_owner: %{}
+      },
+      cast_private: true
+    )
+  end
+
+  defp find_plans() do
+    [
+      %{id: 1, name: "Starter", price: 0, max_users: 1},
+      %{id: 2, name: "Growth", price: 1, max_users: 5},
+      %{id: 3, name: "Enterprise", price: 9000, max_users: :infinity}
+    ]
+  end
+
+  defp plan_options(form) do
+    [{nil, "Please select..."}] ++
+      Enum.map(form.available_plans, fn plan ->
+        {plan.id, "#{plan.name} (#{plan.price} USD / month)"}
+      end)
+  end
+end

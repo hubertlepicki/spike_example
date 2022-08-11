@@ -62,6 +62,36 @@ defmodule SpikeExampleWeb do
     end
   end
 
+  def surface_live_view do
+    quote do
+      use Surface.LiveView,
+        layout: {SpikeExampleWeb.LayoutView, "live.html"}
+
+      unquote(view_helpers())
+    end
+  end
+
+  def form_surface_live_view do
+    quote do
+      use Surface.LiveView,
+        layout: {SpikeExampleWeb.LayoutView, "live.html"}
+
+      unquote(view_helpers())
+
+      use Spike.Surface
+    end
+  end
+
+  def form_surface_component do
+    quote do
+      use Surface.LiveComponent
+
+      unquote(view_helpers())
+
+      use Spike.Surface
+    end
+  end
+
   def live_component do
     quote do
       use Phoenix.LiveComponent

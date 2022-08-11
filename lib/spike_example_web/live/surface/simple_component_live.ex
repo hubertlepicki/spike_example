@@ -1,11 +1,13 @@
-defmodule SpikeExampleWeb.SimpleFormComponent do
-  use SpikeExampleWeb, :form_live_component
-  import SpikeExampleWeb.FormComponents
+defmodule SpikeExampleWeb.Surface.SimpleFormComponent do
+  use SpikeExampleWeb, :form_surface_component
+  alias SpikeExampleWeb.Surface.FormComponents.Input
   import SpikeExampleWeb.Debug
+
+  data(success, :boolean, default: false)
 
   def mount(socket) do
     form = SpikeExample.SimpleForm.new(%{})
-    {:ok, socket |> assign(%{form: form, errors: Spike.errors(form), success: false})}
+    {:ok, socket |> assign(%{form: form, errors: Spike.errors(form)})}
   end
 
   def render(%{success: true} = assigns) do
@@ -22,14 +24,14 @@ defmodule SpikeExampleWeb.SimpleFormComponent do
   end
 
   def render(%{form: _, errors: _} = assigns) do
-    ~H"""
+    ~F"""
     <div>
       <div class="float-right">* required fields</div>
-      <.input_component type="text" label="First name:" field={:first_name} form={@form} errors={@errors} target={@myself} />
-      <.input_component type="text" label="Last name:" field={:last_name} form={@form} errors={@errors} target={@myself} />
-      <.input_component type="email" label="E-mail:" field={:email_address} form={@form} errors={@errors} target={@myself} />
-      <.input_component type="password" label="Password:" field={:password} form={@form} errors={@errors} target={@myself} />
-      <.input_component type="checkbox" label="Do you accept Terms & Conditions? *" field={:accepts_conditions} form={@form} errors={@errors} target={@myself} />
+      <Input type="text" label="First name:" field={:first_name} form={@form} errors={@errors} target={@myself} />
+      <Input type="text" label="Last name:" field={:last_name} form={@form} errors={@errors} target={@myself} />
+      <Input type="email" label="E-mail:" field={:email_address} form={@form} errors={@errors} target={@myself} />
+      <Input type="password" label="Password:" field={:password} form={@form} errors={@errors} target={@myself} />
+      <Input type="checkbox" label="Do you accept Terms & Conditions? *" field={:accepts_conditions} form={@form} errors={@errors} target={@myself} />
 
       <div class="clearfix" />
       <a class="button" href="#" phx-click="submit" phx-target={@myself}>Submit</a>
@@ -65,17 +67,17 @@ defmodule SpikeExampleWeb.SimpleFormComponent do
   end
 end
 
-defmodule SpikeExampleWeb.SimpleComponentLive do
-  use SpikeExampleWeb, :live_view
+defmodule SpikeExampleWeb.Surface.SimpleComponentLive do
+  use SpikeExampleWeb, :surface_live_view
 
-  alias SpikeExampleWeb.SimpleFormComponent
+  alias SpikeExampleWeb.Surface.SimpleFormComponent
 
   def render(assigns) do
-    ~H"""
+    ~F"""
     <a href="/" class="float-right">Back to all examples</a>
     <h2>Simple form, handled in LiveComponent:</h2>
 
-    <.live_component module={SimpleFormComponent} id="simple-form-component" />
+    <SimpleFormComponent id="simple-form-component" />
     """
   end
 end

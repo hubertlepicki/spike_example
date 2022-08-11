@@ -22,7 +22,6 @@ defmodule SpikeExampleWeb.SimpleLive do
     """
   end
 
-
   def render(%{form: _, errors: _} = assigns) do
     ~H"""
     <a href="/" class="float-right">Back to all examples</a>
@@ -38,7 +37,7 @@ defmodule SpikeExampleWeb.SimpleLive do
     <div class="clearfix" />
     <a class="button" href="#" phx-click="submit">Submit</a>
     <a class="float-right" href="#" phx-click="reset">Reset</a>
- 
+
     <hr/>
 
     <.debug_assigns form={@form} errors={@errors} success={@success} />
@@ -55,7 +54,7 @@ defmodule SpikeExampleWeb.SimpleLive do
 
   def handle_event("reset", _, socket) do
     form = SpikeExample.SimpleForm.new(%{})
- 
+
     new_socket =
       socket
       |> assign(%{

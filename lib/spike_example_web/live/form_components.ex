@@ -63,10 +63,11 @@ defmodule SpikeExampleWeb.FormComponents do
   end
 
   def input_component(%{type: "checkbox", field: _, form: _, errors: _} = assigns) do
-    assigns = assigns
-              |> assign_new(:checked_value, fn -> "1" end)
-              |> assign_new(:unchecked_value, fn -> "0" end)
-              |> assign_new(:target, fn -> nil end)
+    assigns =
+      assigns
+      |> assign_new(:checked_value, fn -> "1" end)
+      |> assign_new(:unchecked_value, fn -> "0" end)
+      |> assign_new(:target, fn -> nil end)
 
     ~H"""
     <div>

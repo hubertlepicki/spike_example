@@ -28,6 +28,7 @@ defmodule SpikeExample.SignupForm.AccountOwner do
     end
   end
 end
+
 defmodule SpikeExample.SignupForm.Coworker do
   use Spike.Form do
     field(:full_name, :string)
@@ -61,6 +62,7 @@ defmodule SpikeExample.SignupForm.Coworker do
     end
   end
 end
+
 defmodule SpikeExample.SignupForm do
   use Spike.Form do
     field(:company_name, :string)
