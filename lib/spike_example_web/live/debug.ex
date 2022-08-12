@@ -21,4 +21,20 @@ defmodule SpikeExampleWeb.Debug do
     </pre>
     """
   end
+
+  def debug_assigns(%{form: _, errors: _} = assigns) do
+    ~H"""
+    <h3>Debug info</h3>
+
+    @form:
+    <pre>
+      <%= inspect @form, pretty: true %>
+    </pre>
+
+    @errors:
+    <pre>
+      <%= inspect @errors, pretty: true %>
+    </pre>
+    """
+  end
 end

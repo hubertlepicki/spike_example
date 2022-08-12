@@ -22,6 +22,7 @@ defmodule SpikeExampleWeb.Router do
     live "/signup", SignupLive
     live "/simple-liveview", SimpleLive
     live "/simple-livecomponent", SimpleComponentLive
+    live "/custom-form-controls", CustomFormControlsLive
 
     live "/surface/signup", Surface.SignupLive
     live "/surface/simple-component", Surface.SimpleComponentLive
