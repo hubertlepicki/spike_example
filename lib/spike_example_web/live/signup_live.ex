@@ -24,7 +24,9 @@ defmodule SpikeExampleWeb.SignupLive do
     <a href="#" phx-click="reset">Start over</a>
 
     <hr/>
+    <.sources />
 
+    <hr/>
     <.debug_assigns form={@form} errors={@errors} success={@success} />
     """
   end
@@ -66,8 +68,19 @@ defmodule SpikeExampleWeb.SignupLive do
     <a class="button" href="#" phx-click="add_coworker">+ Add coworker</a>
 
     <hr/>
+    <.sources />
 
+    <hr/>
     <.debug_assigns form={@form} errors={@errors} success={@success} />
+    """
+  end
+
+  def sources(assigns) do
+    ~H"""
+    See source of this:
+    <a href="https://github.com/hubertlepicki/spike_example/blob/main/lib/spike_example/signup_form.ex" target="_blank">Spike form</a>
+    and
+    <a href="https://github.com/hubertlepicki/spike_example/blob/main/lib/spike_example_web/live/signup_live.ex" target="_blank">LiveView</a>
     """
   end
 

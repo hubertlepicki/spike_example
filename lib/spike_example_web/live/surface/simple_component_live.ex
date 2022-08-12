@@ -17,7 +17,9 @@ defmodule SpikeExampleWeb.Surface.SimpleFormComponent do
       <a href="#" phx-click="reset">Start over</a>
 
       <hr/>
+      <.sources />
 
+      <hr/>
       <.debug_assigns form={@form} errors={@errors} success={@success} />
     </div>
     """
@@ -38,9 +40,20 @@ defmodule SpikeExampleWeb.Surface.SimpleFormComponent do
       <a class="float-right" href="#" phx-click="reset" phx-target={@myself}>Reset</a>
 
       <hr/>
+      <.sources />
 
+      <hr/>
       <.debug_assigns form={@form} errors={@errors} success={@success} />
     </div>
+    """
+  end
+
+  def sources(assigns) do
+    ~H"""
+    See source of this:
+    <a href="https://github.com/hubertlepicki/spike_example/blob/main/lib/spike_example/simple_form.ex" target="_blank">Spike form</a>
+    and
+    <a href="https://github.com/hubertlepicki/spike_example/blob/main/lib/spike_example_web/live/surface/simple_component_live.ex" target="_blank">LiveView</a>
     """
   end
 

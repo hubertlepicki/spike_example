@@ -49,7 +49,7 @@ defmodule SpikeExample.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:spike, "~> 0.2"},
       {:spike_liveview, "~> 0.2"},
-      {:spike_surface, "~> 0.2"},
+      {:spike_surface, "~> 0.2"}
     ]
   end
 
