@@ -72,6 +72,8 @@ defmodule SpikeExample.SignupForm do
 
     field(:available_plans, {:array, :map}, private: true)
 
+    field(:category_ids, {:array, :integer}, default: [])
+
     embeds_one(:account_owner, __MODULE__.AccountOwner)
     embeds_many(:coworkers, __MODULE__.Coworker)
   end

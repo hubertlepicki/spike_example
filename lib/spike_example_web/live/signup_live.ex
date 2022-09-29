@@ -40,6 +40,7 @@ defmodule SpikeExampleWeb.SignupLive do
     <.input_component type="text" label="Company name:" field={:company_name} form={@form} errors={@errors} />
     <.input_component type="text" label="Subdomain:" field={:subdomain} form={@form} errors={@errors} />
     <.input_component type="select" label="Choose your plan:" field={:plan_id} form={@form} errors={@errors} options={plan_options(@form)} />
+    <.input_component type="multi_select" label="Your business category:" field={:category_ids} form={@form} errors={@errors} options={category_options()} />
     <.input_component type="text" label="Your name:" field={:full_name} form={@form.account_owner} errors={@errors} />
     <.input_component type="text" label="Your email:" field={:email_address} form={@form.account_owner} errors={@errors} />
     <.input_component type="password" label="Your password:" field={:password} form={@form.account_owner} errors={@errors} />
@@ -126,7 +127,8 @@ defmodule SpikeExampleWeb.SignupLive do
     SpikeExample.SignupForm.new(
       %{
         available_plans: find_plans(),
-        account_owner: %{}
+        account_owner: %{},
+        coworkers: []
       },
       cast_private: true
     )
@@ -145,5 +147,16 @@ defmodule SpikeExampleWeb.SignupLive do
       Enum.map(form.available_plans, fn plan ->
         {plan.id, "#{plan.name} (#{plan.price} USD / month)"}
       end)
+  end
+
+  defp category_options() do
+    [
+      {1, "Finance"},
+      {2, "Retail"},
+      {3, "Software"},
+      {4, "Agriculture"},
+      {5, "Military"},
+      {6, "Education"}
+    ]
   end
 end

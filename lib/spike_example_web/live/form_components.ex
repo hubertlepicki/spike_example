@@ -114,6 +114,28 @@ defmodule SpikeExampleWeb.FormComponents do
     """
   end
 
+  def input_component(%{type: "multi_select", field: _, form: _, errors: _, options: _} = assigns) do
+    assigns = assigns |> assign_new(:target, fn -> nil end)
+
+    ~H"""
+    <div>
+      <%= if @label do %>
+        <.label_component text={@label} ref={@form.ref} field={@field} required={is_required?(@form, @field)} />
+      <% end %>
+
+      <.form_field field={@field} form={@form} target={@target}>
+        <select id={"#{@form.ref}_#{@field}"} name="value[]" multiple>
+          <%= for {value, text} <- @options do %>
+            <option value={value || ""} selected={value in Map.get(@form, @field)}><%= text %></option>
+          <% end %>
+        </select>
+      </.form_field>
+
+      <.errors_component form={@form} field={@field} errors={@errors} />
+    </div>
+    """
+  end
+
   def input_component(%{type: "radio", field: _, form: _, errors: _, options: _} = assigns) do
     assigns = assigns |> assign_new(:target, fn -> nil end)
 

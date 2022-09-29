@@ -94,6 +94,26 @@ defmodule SpikeExampleWeb.Surface.FormComponents do
       """
     end
 
+    def render(%{type: "multi_select", options: _} = assigns) do
+      ~F"""
+      <div>
+        {#if @label}
+          <Label form={@form} field={@field} text={@label} required={is_required?(@form, @field)} />
+        {/if}
+
+        <Spike.Surface.FormField form={@form} field={@field} target={@target}>
+          <select id={"#{@form.ref}_#{@field}"} name="value[]" multiple>
+            {#for {value, text} <- @options}
+              <option value={value || ""} selected={value in Map.get(@form, @field)}>{ text }</option>
+            {/for}
+          </select>
+        </Spike.Surface.FormField>
+
+        <Errors form={@form} field={@field} errors={@errors} />
+      </div> 
+      """
+    end
+
     def render(%{type: "checkbox", options: _} = assigns) do
       ~F"""
       <div>
