@@ -1,11 +1,11 @@
 defmodule SpikeExampleWeb.FormComponents do
-  use SpikeExampleWeb, :component
+  use SpikeExampleWeb, :html
 
   import Spike.LiveView.Components
 
   def errors_component(%{form: _, field: _, errors: _} = assigns) do
     ~H"""
-    <.errors let={field_errors} field={@field} form={@form} errors={@errors}>
+    <.errors :let={field_errors} field={@field} form={@form} errors={@errors}>
       <span class="error">
         <%= field_errors |> Enum.map(fn {_k, v} -> v end) |> Enum.join(", ") %>
       </span>
@@ -56,7 +56,7 @@ defmodule SpikeExampleWeb.FormComponents do
       <% end %>
 
       <.form_field field={@field} form={@form} target={@target}>
-        <input id={"#{@form.ref}_#{@field}"} name="value" type={type} value={@form |> Map.get(@field)} />
+        <input id={"#{@form.ref}_#{@field}"} name="value" type={@type} value={@form |> Map.get(@field)} />
       </.form_field>
 
       <.errors_component form={@form} field={@field} errors={@errors} />

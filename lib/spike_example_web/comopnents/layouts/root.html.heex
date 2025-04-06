@@ -4,10 +4,10 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta name="csrf-token" content={csrf_token_value()}>
-    <%= live_title_tag assigns[:page_title] || "Spike Example" %>
-    <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")}/>
-    <script defer phx-track-static type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
+    <meta name="csrf-token" content={get_csrf_token()}>
+    <.live_title default="Spike Example"><%= assigns[:page_title] %></.live_title>
+    <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"}/>
+    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}></script>
   </head>
   <body>
     <header>
@@ -20,7 +20,7 @@
           </ul>
         </nav>
         <a href="https://github.com/hubertlepicki/spike/" class="phx-logo">
-          <img src={Routes.static_path(@conn, "/images/spike-logo.png")} alt="Spike Logo"/>
+          <img src={~p"/images/spike-logo.png"} alt="Spike Logo"/>
         </a>
       </section>
     </header>

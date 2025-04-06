@@ -1,5 +1,5 @@
 defmodule SpikeExampleWeb.Debug do
-  use SpikeExampleWeb, :component
+  use SpikeExampleWeb, :html
 
   def debug_assigns(%{form: _, errors: _, success: _} = assigns) do
     ~H"""

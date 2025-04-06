@@ -37,11 +37,11 @@ defmodule SpikeExampleWeb.CustomFormControlsLive do
 
   @doc """
   To create custom form controls you can use several techniques:
-  - use Spike.LiveView.Components.form_field which wraps hidden field
-  - emit spike-form-event:set-value event from your own Hook
-  - emit spike-form-event:set-value using default Phoenix hooks (example below)
+    - use Spike.LiveView.Components.form_field which wraps hidden field
+    - emit spike-form-event:set-value event from your own Hook
+    - emit spike-form-event:set-value using default Phoenix hooks (example below)
   """
-  defp custom_select(%{label: _, field: _, form: _, options: _} = assigns) do
+  def custom_select(%{label: _, field: _, form: _, options: _} = assigns) do
     ~H"""
       <div>
         <label>Choose your size:</label>

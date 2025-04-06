@@ -10,14 +10,14 @@ defmodule SpikeExample.SignupForm.AccountOwner do
 
   validates(:email_address,
     presence: true,
-    by: &__MODULE__.validate_email_address_not_used/2,
+    by: &__MODULE__.validate_email_address_not_used/3,
     format: [with: ~r/^[A-Za-z0-9\._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/, allow_blank: true]
   )
 
   def validate_email_address_not_used(nil, _), do: :ok
 
-  def validate_email_address_not_used(email, account_owner) do
-    [signup_form, :account_owner] = Spike.validation_context(account_owner)
+  def validate_email_address_not_used(email, _account_owner, context) do
+    signup_form = hd(context)
 
     cond do
       Enum.any?(signup_form.coworkers, fn coworker -> coworker.email_address == email end) ->
@@ -39,14 +39,14 @@ defmodule SpikeExample.SignupForm.Coworker do
 
   validates(:email_address,
     presence: true,
-    by: &__MODULE__.validate_email_address_not_used/2,
+    by: &__MODULE__.validate_email_address_not_used/3,
     format: [with: ~r/^[A-Za-z0-9\._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,6}$/, allow_blank: true]
   )
 
   def validate_email_address_not_used(nil, _), do: :ok
 
-  def validate_email_address_not_used(email, coworker) do
-    [signup_form, :coworkers] = Spike.validation_context(coworker)
+  def validate_email_address_not_used(email, coworker, context) do
+    signup_form = hd(context)
 
     cond do
       signup_form.account_owner && signup_form.account_owner.email_address == email ->

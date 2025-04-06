@@ -131,7 +131,7 @@ defmodule SpikeExampleWeb.Surface.SignupLive do
         available_plans: find_plans(),
         account_owner: %{}
       },
-      cast_private: true
+      allow_private_fields: true
     )
   end
 

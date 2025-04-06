@@ -130,7 +130,7 @@ defmodule SpikeExampleWeb.SignupLive do
         account_owner: %{},
         coworkers: []
       },
-      cast_private: true
+      allow_private_fields: true
     )
   end
 

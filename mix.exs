@@ -33,23 +33,23 @@ defmodule SpikeExample.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.6.11"},
-      {:phoenix_html, "~> 3.0"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.17.5"},
-      {:surface, "~> 0.7.5"},
-      {:floki, ">= 0.30.0", only: :test},
-      {:phoenix_live_dashboard, "~> 0.6"},
-      {:esbuild, "~> 0.4", runtime: Mix.env() == :dev},
-      {:swoosh, "~> 1.3"},
-      {:telemetry_metrics, "~> 0.6"},
-      {:telemetry_poller, "~> 1.0"},
-      {:gettext, "~> 0.18"},
-      {:jason, "~> 1.2"},
-      {:plug_cowboy, "~> 2.5"},
-      {:spike, "~> 0.2"},
-      {:spike_liveview, "~> 0.2"},
-      {:spike_surface, "~> 0.2"}
+      {:phoenix, "~> 1.7.21"},
+      {:phoenix_html, "~> 4.2"},
+      {:phoenix_live_reload, "~> 1.4", only: :dev},
+      {:phoenix_live_view, "~> 1.0"},
+      {:surface, "~> 0.12"},
+      {:floki, "~> 0.37", only: :test},
+      {:phoenix_live_dashboard, "~> 0.8"},
+      {:esbuild, "~> 0.9", runtime: Mix.env() == :dev},
+      {:swoosh, "~> 1.18"},
+      {:telemetry_metrics, "~> 1.1"},
+      {:telemetry_poller, "~> 1.2"},
+      {:gettext, "~> 0.26"},
+      {:jason, "~> 1.4"},
+      {:plug_cowboy, "~> 2.7"},
+      {:spike, path: "../spike", override: true},
+      {:spike_liveview, path: "../spike-liveview", override: true},
+      {:spike_surface, path: "../spike-surface", override: true}
     ]
   end
 
